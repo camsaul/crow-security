@@ -10,9 +10,10 @@ Header-only HTTP Security Middleware for Crow.
     {
         crow::Crow app;
         
-        // Configure HTTP security headers when adding middleware; they'll be returned with every response
         using namespace crow::security_middleware;
         using Type = Sources::Type;
+        
+        // Configure HTTP security headers when adding middleware; they'll be returned with every response
         app.use(new SecurityMiddleware()
                     .setXFrameOptions(XFrameOptions::DENY)
                     .setXSSProtection(XSSProtection::BLOCK)
