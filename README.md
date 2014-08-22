@@ -10,19 +10,18 @@ Header-only HTTP Security Middleware for Crow.
     {
         crow::Crow app;
         
-        {
-            // Configure HTTP security headers when adding middleware; they'll be returned with every response
-            using namespace crow::security_middleware;
-            using Type = Sources::Type;
-            app.use(new SecurityMiddleware()
-                            .setXFrameOptions(XFrameOptions::DENY)
-                            .setXSSProtection(XSSProtection::BLOCK)
-                            .setNoSniff()
-                            .setStrictTransportSecurity(31536000)
-                            .setAccessControlAllowOrigin("http://mysite.com")
-                            .setContentSecurityPolicy(Sources().trust(Type::DEFAULT, Sources::kSelf).trust(Type::FONT, "https://themes.googleusercontent.com")
-                            .setCrossDomainMetaPolicy(PermittedCrossDomainMetaPolicy::MASTER_ONLY));
-        }
+        // Configure HTTP security headers when adding middleware; they'll be returned with every response
+        using namespace crow::security_middleware;
+        using Type = Sources::Type;
+        app.use(new SecurityMiddleware()
+                    .setXFrameOptions(XFrameOptions::DENY)
+                    .setXSSProtection(XSSProtection::BLOCK)
+                    .setNoSniff()
+                    .setStrictTransportSecurity(31536000)
+                    .setAccessControlAllowOrigin("http://mysite.com")
+                    .setContentSecurityPolicy(Sources().trust(Type::DEFAULT, Sources::kSelf)
+                                                       .trust(Type::FONT, "https://themes.googleusercontent.com"))
+                    .setCrossDomainMetaPolicy(PermittedCrossDomainMetaPolicy::MASTER_ONLY));
     	
         CROW_ROUTE(app, "/")
         ([]{
