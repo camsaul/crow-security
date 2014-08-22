@@ -177,6 +177,6 @@ namespace crow {
 			{Type::OBJECT,	"object-src"}
 		};
 		
-		const std::string& Sources::kSelf = "'self'";
+		const std::string Sources::kSelf = "'self'";
 	}
 }
