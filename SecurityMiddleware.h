@@ -38,7 +38,7 @@ namespace crow {
 				OBJECT,		///< specify origins that can deliver Flash and other plugins
 			};
 			
-			static const std::string& kSelf; ///< "'self'" for use as an origin.
+			static const std::string kSelf; ///< "'self'" for use as an origin.
 			
 			/// Trust this origin to supply the specified content type.
 			Sources& trust(Type type, const std::string& origin = kSelf) {
