@@ -1,7 +1,7 @@
 Crow Security
 =============
 
-Header-only HTTP Security Middleware for Crow.
+Header-only HTTP Security Middleware for [Crow](https://github.com/ipkn/crow).
 
     #include "crow.h"
     #include "contrib/security/SecurityMiddleware.h
