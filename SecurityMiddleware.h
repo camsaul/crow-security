@@ -41,10 +41,7 @@ namespace crow {
 			static const std::string kSelf; ///< "'self'" for use as an origin.
 			
 			/// Trust this origin to supply the specified content type.
-			Sources& trust(Type type, const std::string& origin = kSelf) {
-				trustedSources_[type] += " " + origin; /// just combine matching types into single string
-				return *this;
-			}
+			Sources& trust(Type type, const std::string& origin = kSelf);
 		private:
 			using TypeMap = std::unordered_map<Type, std::string>;
 			static const TypeMap kTypeNames;
@@ -66,16 +63,15 @@ namespace crow {
 		/// \code
 		/// SecurityMiddleware().setXFrameOptions(XFrameOptions::BLOCK).setNoSniff()
 		/// \endcode
-		class SecurityMiddleware : public IMiddleware {
+		class SecurityMiddleware {
 		public:
+			struct context {
+			};
+			
 #pragma mark - Create Instance
 			/// Create a new SecurityMiddleware instance with some reasonable defaults.
 			/// Intended just as a starting point - be sure to set up HSTS, Content Security Policy, etc.
-			SecurityMiddleware() {
-				setXFrameOptions(XFrameOptions::SAMEORIGIN)
-				.setXSSProtection(XSSProtection::BLOCK)
-				.setNoSniff();
-			}
+			SecurityMiddleware();
 			
 #pragma mark - X-Frame-Options
 			/// Set the X-Frame-Options header to tell browsers not to render our site as an iframe in a different domain (prevent clickjacking)
@@ -149,34 +145,13 @@ namespace crow {
 				return *this;
 			}
 			
-			// TODO - Disable the 'Server: Crow/0.1' header
-			
 #pragma mark - Handle Request
-			void after_handle(const request& req, response& res) {}
+			void after_handle(const request& req, response& res, context& ctx);
 			
-			void before_handle(const request& req, response& res) {
-				for (auto pair : headers_) {
-					res.headers[pair.first] = pair.second;
-				}
-				res.headers.erase("Server");
-			}
+			void before_handle(const request& req, response& res, context& ctx);
 			
 		private:
 			Headers headers_;
 		};
-		
-		const Sources::TypeMap Sources::kTypeNames = {
-			{Type::DEFAULT, "default-src"},
-			{Type::SCRIPT,	"script-src"},
-			{Type::STYLE,	"style-src"},
-			{Type::CONNECT, "connect-src"},
-			{Type::FONT,	"font-src"},
-			{Type::FRAME,	"frame-src"},
-			{Type::IMG,		"img-src"},
-			{Type::MEDIA,	"media-src"},
-			{Type::OBJECT,	"object-src"}
-		};
-		
-		const std::string Sources::kSelf = "'self'";
 	}
 }
